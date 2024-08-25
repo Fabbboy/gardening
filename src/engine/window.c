@@ -3,7 +3,6 @@
 #include <stdlib.h>
 
 Result garden_window_create(GLFWmonitor *monitor) {
-
   GardenWindow *window = malloc(sizeof(GardenWindow));
   if (window == NULL) {
     return result_error(error_create("Failed to allocate memory for window"));
@@ -19,7 +18,6 @@ Result garden_window_create(GLFWmonitor *monitor) {
   window->height = mode->height;
   window->title = "Garden Simulator";
 
-  // For debugging, switch to windowed mode by using NULL for monitor
   window->window = glfwCreateWindow(window->width, window->height,
                                     window->title, monitor, NULL);
 
