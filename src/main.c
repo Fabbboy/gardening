@@ -28,8 +28,6 @@ int main() {
   GardenRenderer *renderer = garden_renderer_create(
       window, garden_color_create(0.0f, 0.0f, 0.0f, 1.0f), GL_COLOR_BUFFER_BIT);
 
-  glfwMakeContextCurrent(window->window);
-
   while (!glfwWindowShouldClose(window->window)) {
     glfwPollEvents();
 

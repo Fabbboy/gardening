@@ -61,6 +61,14 @@ Result garden_window_create(GLFWmonitor *monitor) {
 
   garden_window_callbacks(window);
 
+  glfwMakeContextCurrent(window->window);
+
+  glewExperimental = GL_TRUE;
+  if (glewInit() != GLEW_OK) {
+    garden_window_destroy(window);
+    return result_error(error_create("Failed to initialize GLEW"));
+  }
+
   return result_ok(window);
 }
 
