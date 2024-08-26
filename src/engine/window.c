@@ -1,7 +1,15 @@
 #include "include/window.h"
 #include <GLFW/glfw3.h>
+#include <stdbool.h>
 #include <stdio.h>
 #include <stdlib.h>
+
+static inline Result tryinit_glfw() {
+  if (!glfwInit()) {
+    return result_error(error_create("Failed to initialize GLFW"));
+  }
+  return result_ok(NULL);
+}
 
 static inline void callback_fb_resize(GLFWwindow *window, int width,
                                       int height) {
@@ -13,9 +21,18 @@ static inline void callback_fb_resize(GLFWwindow *window, int width,
 }
 
 Result garden_window_create(GLFWmonitor *monitor) {
+  Result init_res = tryinit_glfw();
+  if (result_is_error(&init_res)) {
+    return init_res;
+  }
   GardenWindow *window = malloc(sizeof(GardenWindow));
   if (window == NULL) {
     return result_error(error_create("Failed to allocate memory for window"));
+  }
+
+  if (monitor == NULL) {
+    free(window);
+    return result_error(error_create("Monitor is NULL"));
   }
 
   const GLFWvidmode *mode = glfwGetVideoMode(monitor);
