@@ -1,3 +1,4 @@
+#include "engine/include/renderer.h"
 #include "engine/include/window.h"
 #include "utils/include/result.h"
 #include <GLFW/glfw3.h>
@@ -24,16 +25,18 @@ int main() {
     return 1;
   }
   GardenWindow *window = (GardenWindow *)result_unwrap(&win_res);
+  GardenRenderer *renderer = garden_renderer_create(
+      window, garden_color_create(0.0f, 0.0f, 0.0f, 1.0f), GL_COLOR_BUFFER_BIT);
 
   glfwMakeContextCurrent(window->window);
 
   while (!glfwWindowShouldClose(window->window)) {
     glfwPollEvents();
 
-    glClear(GL_COLOR_BUFFER_BIT);
-    glfwSwapBuffers(window->window);
+    renderer->swap(renderer);
   }
 
+  garden_renderer_destroy(renderer);
   garden_window_destroy(window);
   return 0;
 }

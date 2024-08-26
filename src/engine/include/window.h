@@ -12,5 +12,4 @@ struct GardenWindow {
 };
 
 Result garden_window_create(GLFWmonitor *monitor);
-
 void garden_window_destroy(GardenWindow *window);
