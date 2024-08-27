@@ -10,22 +10,11 @@ typedef struct GardenBuffer GardenBuffer;
 struct GardenBuffer {
   GardenLayout layout;
   uint bufferId;
-  bool isIndex;
 };
-
-/* GardenBuffer *garden_buffer_create(GardenLayout layout);
-void garden_buffer_bind(GardenBuffer *buffer);
-void garden_buffer_unbind(GardenBuffer *buffer);
-void garden_buffer_set_data(GardenBuffer *buffer, size_t size, void *data);
-GardenLayout garden_buffer_get_layout(GardenBuffer *buffer);
-void garden_buffer_destroy(GardenBuffer *buffer);
- */
 
 GardenBuffer *garden_buffer_create_dyn(GardenLayout layout, size_t size);
 GardenBuffer *garden_buffer_create(GardenLayout layout, float *data,
                                    size_t size);
-GardenBuffer *garden_buffer_create_index(GardenLayout layout, uint *data,
-                                         size_t size);
 
 void garden_buffer_bind(GardenBuffer *buffer);
 void garden_buffer_unbind(GardenBuffer *buffer);
@@ -33,4 +22,22 @@ void garden_buffer_unbind(GardenBuffer *buffer);
 void garden_buffer_destroy(GardenBuffer *buffer);
 void garden_buffer_set(GardenBuffer *buffer, size_t size, void *data);
 GardenLayout garden_buffer_get_layout(GardenBuffer *buffer);
-void garden_buffer_apply_layout(GardenBuffer *buffer);
+
+typedef struct GardenIndexBuffer GardenIndexBuffer;
+
+struct GardenIndexBuffer {
+  GardenLayout layout;
+  uint bufferId;
+  uint count;
+};
+
+GardenIndexBuffer *garden_index_buffer_create(GardenLayout layout, uint *data,
+                                              size_t size);
+
+void garden_index_buffer_bind(GardenIndexBuffer *buffer);
+void garden_index_buffer_unbind(GardenIndexBuffer *buffer);
+
+void garden_index_buffer_destroy(GardenIndexBuffer *buffer);
+void garden_index_buffer_set(GardenIndexBuffer *buffer, size_t size,
+                             void *data);
+uint garden_index_buffer_get_count(GardenIndexBuffer *buffer);

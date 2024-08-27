@@ -1,29 +1,8 @@
 #include "include/buffer.h"
 
-void garden_buffer_apply_layout(GardenBuffer *buffer) {
-  garden_buffer_bind(buffer);
-
-  const GardenLayout *layout = &buffer->layout;
-  size_t offset = 0;
-
-  for (size_t i = 0; i < layout->attribute_count; i++) {
-    GardenAttribute attribute = layout->attributes[i];
-    GLenum type = garden_attribute_type_to_gl(attribute.type);
-
-    glVertexAttribPointer(i, attribute.size, type, attribute.normalized,
-                          layout->stride, (const void *)offset);
-    glEnableVertexAttribArray(i);
-
-    offset += attribute.size * garden_get_size_of_type(type);
-  }
-
-  garden_buffer_unbind(buffer);
-}
-
 GardenBuffer *garden_buffer_create_dyn(GardenLayout layout, size_t size) {
   GardenBuffer *buffer = malloc(sizeof(GardenBuffer));
   buffer->layout = layout;
-  buffer->isIndex = false;
   glCreateBuffers(1, &buffer->bufferId);
   glNamedBufferData(buffer->bufferId, size, NULL, GL_DYNAMIC_DRAW);
 
@@ -33,7 +12,6 @@ GardenBuffer *garden_buffer_create(GardenLayout layout, float *data,
                                    size_t size) {
   GardenBuffer *buffer = malloc(sizeof(GardenBuffer));
   buffer->layout = layout;
-  buffer->isIndex = false;
   glCreateBuffers(1, &buffer->bufferId);
   glNamedBufferData(buffer->bufferId, size, data, GL_STATIC_DRAW);
   return buffer;
@@ -43,26 +21,17 @@ GardenBuffer *garden_buffer_create_index(GardenLayout layout, uint *data,
                                          size_t size) {
   GardenBuffer *buffer = malloc(sizeof(GardenBuffer));
   buffer->layout = layout;
-  buffer->isIndex = true;
   glCreateBuffers(1, &buffer->bufferId);
   glNamedBufferData(buffer->bufferId, size, data, GL_STATIC_DRAW);
   return buffer;
 };
 
 void garden_buffer_bind(GardenBuffer *buffer) {
-  if (buffer->isIndex) {
-    glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, buffer->bufferId);
-  } else {
-    glBindBuffer(GL_ARRAY_BUFFER, buffer->bufferId);
-  }
+  glBindBuffer(GL_ARRAY_BUFFER, buffer->bufferId);
 }
 
 void garden_buffer_unbind(GardenBuffer *buffer) {
-  if (buffer->isIndex) {
-    glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, 0);
-  } else {
-    glBindBuffer(GL_ARRAY_BUFFER, 0);
-  }
+  glBindBuffer(GL_ARRAY_BUFFER, 0);
 };
 
 void garden_buffer_destroy(GardenBuffer *buffer) {
@@ -76,4 +45,38 @@ void garden_buffer_set(GardenBuffer *buffer, size_t size, void *data) {
 };
 GardenLayout garden_buffer_get_layout(GardenBuffer *buffer) {
   return buffer->layout;
+};
+
+GardenIndexBuffer *garden_index_buffer_create(GardenLayout layout, uint *data,
+                                              size_t size) {
+  GardenIndexBuffer *buffer = malloc(sizeof(GardenIndexBuffer));
+  if (!buffer) {
+    printf("Failed to allocate memory for GardenIndexBuffer\n");
+    return NULL;
+  }
+  buffer->layout = layout;
+  glGenBuffers(1, &buffer->bufferId);
+  glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, buffer->bufferId);
+  glBufferData(GL_ELEMENT_ARRAY_BUFFER, size, data, GL_STATIC_DRAW);
+  buffer->count = size / sizeof(uint);
+  return buffer;
+}
+
+void garden_index_buffer_bind(GardenIndexBuffer *buffer) {
+  glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, buffer->bufferId);
+};
+void garden_index_buffer_unbind(GardenIndexBuffer *buffer) {
+  glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, 0);
+};
+
+void garden_index_buffer_destroy(GardenIndexBuffer *buffer) {
+  glDeleteBuffers(1, &buffer->bufferId);
+  free(buffer);
+};
+void garden_index_buffer_set(GardenIndexBuffer *buffer, size_t size,
+                             void *data) {
+  glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, buffer->bufferId);
+};
+uint garden_index_buffer_get_count(GardenIndexBuffer *buffer) {
+  return buffer->count;
 };

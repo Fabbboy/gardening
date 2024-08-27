@@ -9,15 +9,14 @@ typedef struct GardenMesh GardenMesh;
 
 struct GardenMesh {
   GardenBuffer *vertex_buffer;
-  GardenBuffer *index_buffer;
-  uint index_count;
+  GardenIndexBuffer *index_buffer;
   GLenum mode;
   GLuint vao;
 };
 
 GardenMesh *garden_mesh_create(GardenBuffer *vertex_buffer,
-                               GardenBuffer *index_buffer, uint index_count,
-                               GLenum mode);
+                               GardenIndexBuffer *index_buffer,
+                               uint index_count, GLenum mode);
 
 void garden_mesh_draw(GardenMesh *mesh);
 
