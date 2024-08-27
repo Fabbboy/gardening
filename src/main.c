@@ -80,9 +80,18 @@ int main() {
   GardenIndexBuffer *index_buffer =
       (GardenIndexBuffer *)result_unwrap(&res_index_buffer);
 
-  GardenMesh *mesh =
+  Result res_mesh =
       garden_mesh_create(vertex_buffer, index_buffer,
                          sizeof(indecies) / sizeof(GLuint), GL_TRIANGLES);
+
+  if (result_is_error(&res_mesh)) {
+    Error *error = result_unwrap_error(&res_mesh);
+    printf("Failed to create mesh: %s\n", error->message);
+    error_destroy(error);
+    return 1;
+  }
+
+  GardenMesh *mesh = (GardenMesh *)result_unwrap(&res_mesh);
 
   while (!glfwWindowShouldClose(window->window)) {
     glfwPollEvents();

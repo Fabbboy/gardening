@@ -2,13 +2,13 @@
 #include "engine/buffer/include/buffer.h"
 #include "engine/buffer/include/layout.h"
 
-GardenMesh *garden_mesh_create(GardenBuffer *vertex_buffer,
-                               GardenIndexBuffer *index_buffer,
-                               uint index_count, GLenum mode) {
+Result garden_mesh_create(GardenBuffer *vertex_buffer,
+                          GardenIndexBuffer *index_buffer, uint index_count,
+                          GLenum mode) {
   GardenMesh *mesh = malloc(sizeof(GardenMesh));
   if (!mesh) {
-    printf("Failed to allocate memory for GardenMesh\n");
-    return NULL;
+    return result_error(
+        error_create("Failed to allocate memory for GardenMesh"));
   }
   mesh->vertex_buffer = vertex_buffer;
   mesh->index_buffer = index_buffer;
@@ -30,7 +30,7 @@ GardenMesh *garden_mesh_create(GardenBuffer *vertex_buffer,
   }
 
   glBindVertexArray(0);
-  return mesh;
+  return result_ok(mesh);
 }
 
 void garden_mesh_draw(GardenMesh *mesh) {

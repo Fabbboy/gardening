@@ -14,7 +14,7 @@ struct GardenMesh {
   GLuint vao;
 };
 
-GardenMesh *garden_mesh_create(GardenBuffer *vertex_buffer,
+Result garden_mesh_create(GardenBuffer *vertex_buffer,
                                GardenIndexBuffer *index_buffer,
                                uint index_count, GLenum mode);
 
