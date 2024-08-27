@@ -14,8 +14,10 @@ void garden_buffer_apply_layout(GardenBuffer *buffer) {
                           layout->stride, (const void *)offset);
     glEnableVertexAttribArray(i);
 
-    offset += attribute.size * sizeof(type);
+    offset += attribute.size * garden_get_size_of_type(type);
   }
+
+  garden_buffer_unbind(buffer);
 }
 
 GardenBuffer *garden_buffer_create_dyn(GardenLayout layout, size_t size) {

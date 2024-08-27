@@ -20,6 +20,17 @@ static inline GLenum garden_attribute_type_to_gl(GardenAttributeType type) {
   }
 }
 
+size_t garden_get_size_of_type(GLenum type) {
+  switch (type) {
+  case GL_FLOAT:
+    return sizeof(GLfloat);
+  case GL_INT:
+    return sizeof(GLint);
+  default:
+    return 0; // Handle other cases or throw an error
+  }
+}
+
 typedef struct GardenAttribute GardenAttribute;
 
 struct GardenAttribute {

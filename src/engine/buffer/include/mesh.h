@@ -12,11 +12,12 @@ struct GardenMesh {
   GardenBuffer *index_buffer;
   uint index_count;
   GLenum mode;
+  GLuint vao;
 };
 
 GardenMesh *garden_mesh_create(GardenBuffer *vertex_buffer,
-                         GardenBuffer *index_buffer, uint index_count,
-                         GLenum mode);
+                               GardenBuffer *index_buffer, uint index_count,
+                               GLenum mode);
 
 void garden_mesh_draw(GardenMesh *mesh);
 

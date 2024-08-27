@@ -8,6 +8,17 @@ GardenMesh *garden_mesh_create(GardenBuffer *vertex_buffer,
   mesh->index_buffer = index_buffer;
   mesh->index_count = index_count;
   mesh->mode = mode;
+
+  glGenVertexArrays(1, &mesh->vao);
+  glBindVertexArray(mesh->vao);
+
+  garden_buffer_apply_layout(vertex_buffer);
+
+  if (index_buffer) {
+    garden_buffer_bind(index_buffer);
+  }
+
+  glBindVertexArray(0);
   return mesh;
 };
 
