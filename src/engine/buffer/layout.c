@@ -30,4 +30,3 @@ GardenLayout garden_layout_create(GardenAttribute *attributes,
   layout.stride = stride;
   return layout;
 };
-// Compare this snippet from src/engine/buffer/include/buffer.h:
