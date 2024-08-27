@@ -9,6 +9,8 @@ struct Result {
   bool is_ok;
   union {
     void *data;
+    unsigned int uidata;
+    int idata;
     Error *error;
   };
 };
@@ -19,3 +21,5 @@ void *result_unwrap(Result *result);
 Error *result_unwrap_error(Result *result);
 bool result_is_ok(Result *result);
 bool result_is_error(Result *result);
+
+#define OK (result_ok(NULL))
