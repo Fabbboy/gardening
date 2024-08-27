@@ -1,3 +1,6 @@
+#include "engine/buffer/include/buffer.h"
+#include "engine/buffer/include/layout.h"
+#include "engine/buffer/include/mesh.h"
 #include "engine/include/window.h"
 #include "engine/rendering/include/renderer.h"
 #include "engine/rendering/include/shader.h"
@@ -43,31 +46,29 @@ int main() {
       -0.5f, -0.5f, 0.0f, /* Lower left */ 0.5f, -0.5f, 0.0f, /* Lower right */
       0.0f,  0.5f,  0.0f                                      /* Upper center */
   };
+  GLuint indecies[] = {0, 1, 2};
 
-  GLuint vao, vbo;
-  glGenVertexArrays(1, &vao);
-  glBindVertexArray(vao);
-  glGenBuffers(1, &vbo);
-  glBindBuffer(GL_ARRAY_BUFFER, vbo);
-  glBufferData(GL_ARRAY_BUFFER, sizeof(vertices), vertices, GL_STATIC_DRAW);
-  glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 3 * sizeof(GLfloat),
-                        (GLvoid *)0);
-  glEnableVertexAttribArray(0);
-  glBindBuffer(GL_ARRAY_BUFFER, 0);
-  glBindVertexArray(0);
+  GardenAttribute attributes[] = {
+      garden_attribute_create(/*size=*/3, /*type=*/GARDEN_ATTRIBUTE_FLOAT,
+                              /*normalized=*/GL_FALSE)};
 
-  printf("Program ID: %u, VAO: %u, VBO: %u\n", garden_shader->programId, vao,
-         vbo);
+  GardenLayout layout = garden_layout_create(attributes, 1);
+
+  GardenBuffer *vertex_buffer =
+      garden_buffer_create(layout, vertices, sizeof(vertices));
+
+  GardenBuffer *index_buffer =
+      garden_buffer_create_index(layout, indecies, sizeof(indecies));
+
+  GardenMesh *mesh =
+      garden_mesh_create(vertex_buffer, index_buffer, 3, GL_TRIANGLES);
 
   while (!glfwWindowShouldClose(window->window)) {
     glfwPollEvents();
 
     garden_shader_use(garden_shader);
 
-    // Render the scene
-    glBindVertexArray(vao);
-    glDrawArrays(GL_TRIANGLES, 0, 3);
-    glBindVertexArray(0);
+    garden_mesh_draw(mesh);
 
     GLenum error;
     while ((error = glGetError()) != GL_NO_ERROR) {
