@@ -1,6 +1,7 @@
 #pragma once
 
 #include "layout.h"
+#include "utils/include/result.h"
 #include <GL/glew.h>
 #include <GLFW/glfw3.h>
 #include <cglm/cglm.h>
@@ -12,9 +13,8 @@ struct GardenBuffer {
   uint bufferId;
 };
 
-GardenBuffer *garden_buffer_create_dyn(GardenLayout layout, size_t size);
-GardenBuffer *garden_buffer_create(GardenLayout layout, float *data,
-                                   size_t size);
+Result garden_buffer_create_dyn(GardenLayout layout, size_t size);
+Result garden_buffer_create(GardenLayout layout, float *data, size_t size);
 
 void garden_buffer_bind(GardenBuffer *buffer);
 void garden_buffer_unbind(GardenBuffer *buffer);
@@ -31,7 +31,7 @@ struct GardenIndexBuffer {
   uint count;
 };
 
-GardenIndexBuffer *garden_index_buffer_create(GardenLayout layout, uint *data,
+Result garden_index_buffer_create(GardenLayout layout, uint *data,
                                               size_t size);
 
 void garden_index_buffer_bind(GardenIndexBuffer *buffer);

@@ -54,21 +54,35 @@ int main() {
 
   GardenLayout layout = garden_layout_create(attributes, 1);
 
-  GardenBuffer *vertex_buffer =
+  Result res_vertex_buffer =
       garden_buffer_create(layout, vertices, sizeof(vertices));
 
-  GardenIndexBuffer *index_buffer =
+  if (result_is_error(&res_vertex_buffer)) {
+    Error *error = result_unwrap_error(&res_vertex_buffer);
+    printf("Failed to create vertex buffer: %s\n", error->message);
+    error_destroy(error);
+    return 1;
+  }
+
+  GardenBuffer *vertex_buffer =
+      (GardenBuffer *)result_unwrap(&res_vertex_buffer);
+
+  Result res_index_buffer =
       garden_index_buffer_create(layout, indecies, sizeof(indecies));
+
+  if (result_is_error(&res_index_buffer)) {
+    Error *error = result_unwrap_error(&res_index_buffer);
+    printf("Failed to create index buffer: %s\n", error->message);
+    error_destroy(error);
+    return 1;
+  }
+
+  GardenIndexBuffer *index_buffer =
+      (GardenIndexBuffer *)result_unwrap(&res_index_buffer);
 
   GardenMesh *mesh =
       garden_mesh_create(vertex_buffer, index_buffer,
                          sizeof(indecies) / sizeof(GLuint), GL_TRIANGLES);
-
-  if (vertex_buffer == NULL || index_buffer == NULL || mesh == NULL) {
-    printf("Error: Null pointer encountered.\n");
-    return 1;
-}
-
 
   while (!glfwWindowShouldClose(window->window)) {
     glfwPollEvents();

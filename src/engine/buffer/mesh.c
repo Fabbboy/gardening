@@ -29,7 +29,7 @@ GardenMesh *garden_mesh_create(GardenBuffer *vertex_buffer,
         attribute.normalized, layout.stride, (void *)attribute.offset);
   }
 
-  glBindVertexArray(0); // Unbind the VAO to prevent accidental changes
+  glBindVertexArray(0);
   return mesh;
 }
 
