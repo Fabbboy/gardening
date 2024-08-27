@@ -1,12 +1,12 @@
 #include "include/renderer.h"
+#include "engine/include/window.h"
 #include <stdlib.h>
 
-void swap_buffer(GardenRenderer *renderer) {
+static void swap_buffer(GardenRenderer *renderer) {
+  glfwSwapBuffers(garden_window_get_window(renderer->window));
   glClearColor(renderer->clear_color.r, renderer->clear_color.g,
                renderer->clear_color.b, renderer->clear_color.a);
   glClear(renderer->clear_mask);
-
-  glfwSwapBuffers(renderer->window->window);
 }
 GardenRenderer *garden_renderer_create(GardenWindow *window,
                                        GardenColor clear_color,

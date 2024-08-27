@@ -19,4 +19,7 @@ struct GardenWindow {
 
 Result garden_window_create(GLFWmonitor *monitor);
 void garden_window_callbacks(GardenWindow *window);
+static inline GLFWwindow *garden_window_get_window(GardenWindow *window) {
+  return window->window;
+};
 void garden_window_destroy(GardenWindow *window);

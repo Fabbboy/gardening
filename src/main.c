@@ -74,7 +74,6 @@ int main() {
       printf("OpenGL error: %d\n", error);
     }
 
-    // Swap the buffers using the renderer's swap method
     renderer->swap(renderer);
   }
 
